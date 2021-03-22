@@ -15,16 +15,15 @@ public enum AccountRepository {
     private static final String GET_VERIFIED_ACCOUNT = "SELECT * FROM accounts WHERE username= ? AND password = ?";
 
     public Optional<Account> getVerifiedAccount(Connection connection, String username, String password) throws SQLException {
-        Account verifiedAccount = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_VERIFIED_ACCOUNT)) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                verifiedAccount = mapRowToAccount(resultSet);
+                return Optional.of(mapRowToAccount(resultSet));
             }
         }
-        return Optional.ofNullable(verifiedAccount);
+        return Optional.empty();
     }
 
     private Account mapRowToAccount(ResultSet resultSet) throws SQLException {

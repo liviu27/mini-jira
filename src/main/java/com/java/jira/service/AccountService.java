@@ -19,6 +19,7 @@ public enum AccountService {
     private Account currentLoggedAccount;
 
     public void getVerifiedAccount(String username, String password) throws WrongCredentialsException {
+
         try (Connection connection = DATA_SOURCE.getConnection()) {
             final Optional<Account> optionalAccount = ACCOUNT_REPOSITORY.getVerifiedAccount(connection, username, password);
             currentLoggedAccount = optionalAccount.orElseThrow();
@@ -27,5 +28,9 @@ public enum AccountService {
         } catch (NoSuchElementException exception) {
             throw new WrongCredentialsException();
         }
+    }
+
+    public Account getCurrentLoggedAccount() {
+        return currentLoggedAccount;
     }
 }
